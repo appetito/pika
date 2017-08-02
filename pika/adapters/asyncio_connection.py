@@ -120,7 +120,7 @@ from pika.adapters import base_connection
 from pika.exceptions import ConnectionClosed
 
 
-def _fail(failure=None):
+def _fail(failure):
     f = asyncio.Future()
     f.set_exception(failure)
     return f
@@ -225,8 +225,8 @@ class AsyncioChannel:
 
         try:
             consumer_tag = self.__channel.basic_consume(*args, **kwargs)
-        except:
-            return _fail()
+        except Exception as e:
+            return _fail(e)
 
         return _succeed((queue, consumer_tag))
 
